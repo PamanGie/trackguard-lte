@@ -1,4 +1,4 @@
-﻿"""
+"""
 YOLOv8x Detector for High-Accuracy Pedestrian Detection in GBC-MOT POC
 Uses centralized settings from utils.settings
 """
@@ -16,7 +16,7 @@ try:
     ULTRALYTICS_AVAILABLE = True
 except ImportError:
     ULTRALYTICS_AVAILABLE = False
-    print("âš ï¸ ultralytics not installed. Please run: pip install ultralytics")
+    print("⚠️ ultralytics not installed. Please run: pip install ultralytics")
 
 class YOLOv8Detector:
     """
@@ -48,11 +48,11 @@ class YOLOv8Detector:
         self.half_precision = config['half_precision']
         self.fp16_active = False
         
-        # Load model â€” class names dibaca otomatis dari weight, tidak hardcoded
+        # Load model — class names dibaca otomatis dari weight, tidak hardcoded
         self.model = self._load_model()
 
         # Setelah model loaded, pakai class names langsung dari weight file
-        # model.names â†’ dict {0: 'car', 1: 'truck', ...} (apapun weightnya)
+        # model.names → dict {0: 'car', 1: 'truck', ...} (apapun weightnya)
         self.model_names: dict = {int(k): str(v) for k, v in self.model.names.items()}
 
         # Jika settings menyediakan target_classes eksplisit, filter dari model_names.
@@ -69,7 +69,7 @@ class YOLOv8Detector:
                 if name.lower() in [c.lower() for c in _cfg_classes]
             ]
         else:
-            # Semua class dari weight â€” tidak ada hardcoding
+            # Semua class dari weight — tidak ada hardcoding
             self.target_classes = list(self.model_names.values())
             self.class_ids = list(self.model_names.keys())
         
@@ -77,9 +77,9 @@ class YOLOv8Detector:
         self.detection_times = []
         self.total_detections = 0
         
-        print(f"âœ“ Detector initialized on {self.device}")
+        print(f"✓ Detector initialized on {self.device}")
         print(f"  Weight   : {self.model_variant}")
-        print(f"  Classes  : {len(self.model_names)} total in weight â†’ "
+        print(f"  Classes  : {len(self.model_names)} total in weight → "
               f"using {len(self.class_ids)}: {self.target_classes}")
         print(f"  Input size: {self.input_size}  |  Conf: {self.confidence_threshold}")
         
@@ -398,7 +398,7 @@ class YOLOv8Detector:
     
     def optimize_for_accuracy(self):
         """Apply accuracy optimizations"""
-        print("ðŸŽ¯ Applying accuracy optimizations...")
+        print("🎯 Applying accuracy optimizations...")
         
         # Set optimal batch size
         if hasattr(self.model, 'model'):
@@ -406,7 +406,7 @@ class YOLOv8Detector:
                 # Enable optimized operations
                 torch.backends.cudnn.benchmark = True
                 torch.backends.cudnn.deterministic = False
-                print("âœ“ CUDNN optimizations enabled")
+                print("✓ CUDNN optimizations enabled")
             except:
                 pass
         
@@ -415,7 +415,7 @@ class YOLOv8Detector:
         for _ in range(5):  # More warmup iterations for YOLOv8x
             _ = self.detect(dummy_image)
         
-        print("âœ“ YOLOv8x warmup completed")
+        print("✓ YOLOv8x warmup completed")
     
     def reset_stats(self):
         """Reset performance statistics"""
@@ -434,7 +434,7 @@ class SSDDetector(YOLOv8Detector):
             kwargs['nms_threshold'] = 0.3  # Optimized for recall
             
         super().__init__(**kwargs)
-        print("ðŸ”„ Using YOLOv8x as SSD replacement for better accuracy")
+        print("🔄 Using YOLOv8x as SSD replacement for better accuracy")
 
 
 # Example usage dan testing

@@ -3,10 +3,10 @@ Smart Hungarian Algorithm - FIXED ANTI-FRAGMENTASI VERSION
 ==========================================================
 
 PERBAIKAN UTAMA:
-âœ… Recovery Mode: Cari track lama sebelum bikin baru
-âœ… Extended Memory: Track tidak cepat dilupakan
-âœ… Tiered Recovery: Threshold bertingkat untuk recovery
-âœ… Track Resurrection: Bangkitkan track yang "mati"
+✅ Recovery Mode: Cari track lama sebelum bikin baru
+✅ Extended Memory: Track tidak cepat dilupakan
+✅ Tiered Recovery: Threshold bertingkat untuk recovery
+✅ Track Resurrection: Bangkitkan track yang "mati"
 
 TARGET: Hilangkan fragmentasi, pertahankan ID switch control
 
@@ -135,7 +135,7 @@ class AntiFragmentasiSmartHungarian:
             }
         }
         
-        logger.info("ðŸ”§ FIXED Smart Hungarian (Anti-Fragmentasi) initialized")
+        logger.info("🔧 FIXED Smart Hungarian (Anti-Fragmentasi) initialized")
         logger.info(f"   Main thresholds: {self.uncertainty_thresholds}")
         logger.info(f"   Recovery thresholds: {self.recovery_thresholds}")
         logger.info(f"   Memory retention: {self.memory_retention_frames} frames")
@@ -152,7 +152,7 @@ class AntiFragmentasiSmartHungarian:
         if uncertainty_matrix.shape[0] == 0 or uncertainty_matrix.shape[1] == 0:
             return [], self._create_empty_result()
         
-        logger.debug(f"ðŸ”§ FIXED Smart Hungarian: Processing {uncertainty_matrix.shape} matrix")
+        logger.debug(f"🔧 FIXED Smart Hungarian: Processing {uncertainty_matrix.shape} matrix")
         
         # STEP 1: Scene Analysis
         scene_analysis = self._analyze_scene(uncertainty_matrix, tracks, detections)
@@ -206,7 +206,7 @@ class AntiFragmentasiSmartHungarian:
             'recovery_stats': self.performance_stats['recovery_stats'].copy()  # NEW
         }
         
-        logger.info(f"ðŸ”§ FIXED Smart Hungarian completed: {len(hungarian_assignments)} â†’ {len(final_assignments)} "
+        logger.info(f"🔧 FIXED Smart Hungarian completed: {len(hungarian_assignments)} → {len(final_assignments)} "
                    f"(rate: {assignment_rate:.1%}, recoveries: {self.performance_stats['recovery_stats']['successful_recoveries']})")
         
         return final_assignments, optimization_info
@@ -250,7 +250,7 @@ class AntiFragmentasiSmartHungarian:
         )
         
         self.track_memory[track.track_id] = track_memory
-        logger.debug(f"ðŸ“ Recorded track {track.track_id} death for potential recovery")
+        logger.debug(f"📝 Recorded track {track.track_id} death for potential recovery")
     
     def _attempt_track_recovery(self, detections: List, existing_assignments: List[Tuple[int, int]], 
                                scene_analysis: SceneAnalysis) -> List[Tuple[int, int]]:
@@ -296,7 +296,7 @@ class AntiFragmentasiSmartHungarian:
                 
                 used_detection_indices.add(det_idx)
                 
-                logger.debug(f"ðŸ”„ RECOVERY: Track {best_recovery.track_id} recovered with detection {det_idx} "
+                logger.debug(f"🔄 RECOVERY: Track {best_recovery.track_id} recovered with detection {det_idx} "
                            f"(score: {best_score:.3f})")
         
         return recovery_assignments
@@ -908,7 +908,7 @@ class AntiFragmentasiSmartHungarian:
             }
         }
         
-        logger.info("ðŸ”§ FIXED Smart Hungarian statistics reset")
+        logger.info("🔧 FIXED Smart Hungarian statistics reset")
 
 
 # Backward compatibility
@@ -918,7 +918,7 @@ SmartHungarianOptimizer = AntiFragmentasiSmartHungarian
 def test_fixed_smart_hungarian():
     """Test FIXED Smart Hungarian dengan anti-fragmentasi"""
     
-    print("ðŸ”§ Testing FIXED Smart Hungarian (Anti-Fragmentasi)")
+    print("🔧 Testing FIXED Smart Hungarian (Anti-Fragmentasi)")
     print("=" * 60)
     
     # Create test data
@@ -976,7 +976,7 @@ def test_fixed_smart_hungarian():
     assignments, info = optimizer.optimize_assignment(uncertainty_matrix, tracks, detections)
     
     # Print results
-    print(f"ðŸ”§ FIXED Results:")
+    print(f"🔧 FIXED Results:")
     print(f"   Input matrix: {uncertainty_matrix.shape}")
     print(f"   Assignments proposed: {info['assignments_proposed']}")
     print(f"   Assignments accepted: {info['assignments_accepted']}")
@@ -988,20 +988,20 @@ def test_fixed_smart_hungarian():
     
     # Recovery stats
     recovery_stats = info['recovery_stats']
-    print(f"\nðŸ”„ RECOVERY PERFORMANCE:")
+    print(f"\n🔄 RECOVERY PERFORMANCE:")
     print(f"   Recovery attempts: {recovery_stats['recovery_attempts']}")
     print(f"   Successful recoveries: {recovery_stats['successful_recoveries']}")
     print(f"   Tracks saved: {recovery_stats['tracks_saved']}")
     
     # Performance statistics
     perf_stats = optimizer.get_performance_statistics()
-    print(f"\nðŸ“Š Overall Performance:")
+    print(f"\n📊 Overall Performance:")
     print(f"   Overall acceptance rate: {perf_stats['overall_acceptance_rate']:.1%}")
     print(f"   Recovery success rate: {perf_stats['recovery_performance']['recovery_success_rate']:.1%}")
     print(f"   Tracks saved from fragmentation: {perf_stats['recovery_performance']['tracks_saved_from_fragmentation']}")
     
-    print("\nâœ… FIXED Smart Hungarian test completed successfully!")
-    print("ðŸŽ¯ Anti-fragmentasi mechanism active!")
+    print("\n✅ FIXED Smart Hungarian test completed successfully!")
+    print("🎯 Anti-fragmentasi mechanism active!")
     
     return assignments, info
 
@@ -1010,30 +1010,30 @@ if __name__ == "__main__":
     """Main execution untuk testing FIXED algorithm"""
     print("FIXED SMART HUNGARIAN ALGORITHM - ANTI-FRAGMENTASI")
     print("=" * 70)
-    print("ðŸŽ¯ OBJECTIVE: Selesaikan masalah fragmentasi tracking")
-    print("ðŸ”§ PERBAIKAN:")
-    print("   âœ… Extended memory untuk track yang mati")
-    print("   âœ… Recovery mode sebelum bikin track baru")
-    print("   âœ… Tiered threshold untuk recovery vs assignment")
-    print("   âœ… Track resurrection dari memory")
+    print("🎯 OBJECTIVE: Selesaikan masalah fragmentasi tracking")
+    print("🔧 PERBAIKAN:")
+    print("   ✅ Extended memory untuk track yang mati")
+    print("   ✅ Recovery mode sebelum bikin track baru")
+    print("   ✅ Tiered threshold untuk recovery vs assignment")
+    print("   ✅ Track resurrection dari memory")
     print("=" * 70)
     
     try:
         # Test FIXED functionality
-        print("\nðŸ§ª TESTING FIXED ANTI-FRAGMENTASI")
+        print("\n🧪 TESTING FIXED ANTI-FRAGMENTASI")
         test_result = test_fixed_smart_hungarian()
         
         print(f"\n" + "=" * 70)
-        print("ðŸ† FIXED ALGORITHM VALIDATION")
+        print("🏆 FIXED ALGORITHM VALIDATION")
         print("=" * 70)
-        print("âœ… MASALAH FRAGMENTASI DISELESAIKAN!")
-        print("âœ… Recovery mechanism berfungsi")
-        print("âœ… Extended memory system aktif")
-        print("âœ… Tiered threshold untuk recovery")
-        print("âœ… Track resurrection dari memory")
+        print("✅ MASALAH FRAGMENTASI DISELESAIKAN!")
+        print("✅ Recovery mechanism berfungsi")
+        print("✅ Extended memory system aktif")
+        print("✅ Tiered threshold untuk recovery")
+        print("✅ Track resurrection dari memory")
         print("=" * 70)
         
     except Exception as e:
-        print(f"\nâŒ TESTING FAILED: {str(e)}")
+        print(f"\n❌ TESTING FAILED: {str(e)}")
         import traceback
         traceback.print_exc()

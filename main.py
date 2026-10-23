@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 """
 LTE-TrackGuard Main Application
 ================================
@@ -48,7 +48,7 @@ try:
     TELEGRAM_AVAILABLE = True
 except ImportError:
     TELEGRAM_AVAILABLE = False
-    print("âš ï¸ Telegram notification service not available")
+    print("⚠️ Telegram notification service not available")
 
 # Import evaluation modules
 try:
@@ -59,7 +59,7 @@ try:
     EVALUATION_AVAILABLE = True
 except ImportError:
     EVALUATION_AVAILABLE = False
-    print("âš ï¸ Evaluation module (evaluate_tudat.py) not found. Metrics will be skipped.")
+    print("⚠️ Evaluation module (evaluate_tudat.py) not found. Metrics will be skipped.")
 
 
 def _is_url_source(source: str) -> bool:
@@ -148,7 +148,7 @@ Model Options:
     parser.add_argument('--conf', type=int, default=70,
                        help='Collision confidence threshold %% for COLLISION DETECTED (default: 70)')
     parser.add_argument('--min-hits', type=int, default=5,
-                       help='Minimum track hits before collision check â€” filters ghost tracks (default: 5)')
+                       help='Minimum track hits before collision check — filters ghost tracks (default: 5)')
 
     parser.add_argument('--ppl-kappa-prox', type=float, default=None,
                        help='Override PPL proximity multiplier kappa for sensitivity sweeps (nominal: 2.0)')
@@ -218,14 +218,14 @@ Model Options:
     parser.add_argument('--telegram', action='store_true',
                        help='Enable Telegram notifications')
 
-    # â”€â”€ Custom weight / class override â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Custom weight / class override ──────────────────────────────────────
     parser.add_argument('--target-classes', type=str, default=None,
                        help='Filter class tertentu dari weight, pisahkan koma. '
                             'Contoh: --target-classes car,van,truck,bus,motor  '
                             'Default: None = pakai SEMUA class dari weight file.')
-    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ────────────────────────────────────────────────────────────────────────
 
-    # â”€â”€ Scalar logging (discriminability evaluation, IEEE T-IM) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Scalar logging (discriminability evaluation, IEEE T-IM) ─────────────
     parser.add_argument('--log-scalars', action='store_true',
                        help='Aktifkan scalar logging untuk evaluasi discriminability (IEEE T-IM). '
                             'Menyimpan nilai KELR/ARS/CE setiap proximate pair ke CSV.')
@@ -251,7 +251,7 @@ Model Options:
     parser.add_argument('--fallen-metrics', type=str, default='ar,rot,vel',
                        help='Metrik fallen yang diaktifkan, pisahkan koma: ar,rot,vel '
                             '(default: semua aktif). Contoh ablation: --fallen-metrics ar')
-    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ────────────────────────────────────────────────────────────────────────
 
     args = parser.parse_args()
 
@@ -287,7 +287,7 @@ def configure_physics_settings(args):
     
     # Set YOLO model
     SETTINGS.DETECTOR_WEIGHTS = args.model
-    print(f"ðŸŽ¯ YOLO Model: {args.model}")
+    print(f"🎯 YOLO Model: {args.model}")
     
     # Terapkan target-classes ke settings SEBELUM detector diinit
     # None = biarkan detector baca semua class dari weight (default baru)
@@ -295,7 +295,7 @@ def configure_physics_settings(args):
         _cls_list = [c.strip() for c in args.target_classes.split(',') if c.strip()]
         SETTINGS.DETECTOR_CONFIG['target_classes'] = _cls_list
         SETTINGS.DETECTOR_CONFIG['class_ids']      = None  # akan di-resolve di detector
-        print(f"ðŸŽ¯ Target classes (override): {_cls_list}")
+        print(f"🎯 Target classes (override): {_cls_list}")
     else:
         # Hapus hardcoded class_ids agar detector baca dari model.names
         SETTINGS.DETECTOR_CONFIG['target_classes'] = None
@@ -331,7 +331,7 @@ def configure_physics_settings(args):
         if args.fallen_ppl_only:
             fallen_ppl_cfg['enable_legacy_fallback'] = False
 
-        print("ðŸ”¬ Physics Mode Configuration:")
+        print("🔬 Physics Mode Configuration:")
         print(f"   Behaviour Detection: ENABLED")
         print(f"   EAGER Smoothing: {'ENABLED' if args.eager else 'DISABLED'}")
         print(f"   Physics Predictor: {'ENABLED (experimental)' if args.physics_predictor else 'DISABLED (using Kalman)'}")
@@ -343,7 +343,7 @@ def configure_physics_settings(args):
         if ppl_cfg:
             print(f"   PPL guard overrides: {ppl_cfg}")
     else:
-        print("ðŸ“Š Standard Mode (No Physics)")
+        print("📊 Standard Mode (No Physics)")
 
 
 def draw_dashed_rectangle(img, pt1: tuple, pt2: tuple, color: tuple, thickness: int = 1, dash_length: int = 10):
@@ -494,7 +494,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
         # Draw bounding box - solid untuk confirmed, dashed untuk predicted
         x1, y1, x2, y2 = [int(coord) for coord in bbox]
         
-        # Default: tampilkan semua visual. Non-emergency collision â†’ disembunyikan.
+        # Default: tampilkan semua visual. Non-emergency collision → disembunyikan.
         _show_collision_visuals = True
 
         if prediction_mode == 'physics_predicted':
@@ -549,7 +549,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
             cv2.putText(vis_frame, conf_text, (x2 - conf_size[0] - 5, y1 + conf_size[1] + 2),
                        font_small, font_scale_small, (0, 255, 255), thickness_small)
             
-            # Draw time text dengan icon jam (simbol "â±" tidak support, pakai "T" atau "s")
+            # Draw time text dengan icon jam (simbol "⏱" tidak support, pakai "T" atau "s")
             cv2.putText(vis_frame, f"T:{time_text}", (x2 - time_size[0] - 5, y1 + text_height),
                        font_small, font_scale_small, (0, 255, 255), thickness_small)
             
@@ -560,19 +560,19 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
             
         else:
             # YOLO confirmed - solid box
-            # Collision non-emergency (MIGHT/MEDIUM): skip box & label â†’ cukup di info panel kiri
+            # Collision non-emergency (MIGHT/MEDIUM): skip box & label → cukup di info panel kiri
             if behaviour_type == 'collision':
                 _show_collision_visuals = detection.get('alert_level', 'emergency') in ('emergency', 'warning', 'caution')
             if _show_collision_visuals:
                 thickness = 4
                 cv2.rectangle(vis_frame, (x1, y1), (x2, y2), color, thickness)
 
-            # Draw label (None untuk non-emergency collision â†’ skip draw)
+            # Draw label (None untuk non-emergency collision → skip draw)
             badge = severity_badges.get(severity, '!')
             label = f"{badge} {behaviour_type.upper()}" if _show_collision_visuals else None
             label_conf = None
         
-        # Large text for visibility â€” skip untuk non-emergency collision (label == None)
+        # Large text for visibility — skip untuk non-emergency collision (label == None)
         if label is not None:
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 1.2
@@ -613,7 +613,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
             alert_level_bbox = detection.get('alert_level', 'emergency')
 
             # COLLISION: Dashed red box hanya untuk HIGH confidence (emergency = >= 70%)
-            # MIGHT / MEDIUM â†’ tidak gambar bbox merah, cukup dicatat di info panel kiri
+            # MIGHT / MEDIUM → tidak gambar bbox merah, cukup dicatat di info panel kiri
             if alert_level_bbox == 'emergency':
                 thickness = 3
                 draw_dashed_rectangle(vis_frame, (x1, y1), (x2, y2), (0, 0, 255), thickness, dash_length=15)
@@ -677,7 +677,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                     elif alert_level == 'caution':
                         warning_color = (0, 220, 255)    # Yellow: MONITOR CLOSELY / UNSAFE PROXIMITY
                     else:
-                        warning_color = (180, 180, 180)  # Gray â€” NORMAL
+                        warning_color = (180, 180, 180)  # Gray — NORMAL
 
                     # Get text size
                     (warning_width, warning_height), baseline = cv2.getTextSize(
@@ -712,7 +712,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                     cv2.putText(vis_frame, warning_text, (warning_x, warning_y),
                                warning_font, warning_font_scale, warning_color, warning_thickness)
 
-                    # Downward arrow callout â†’ vehicle (visual pointer for operator)
+                    # Downward arrow callout → vehicle (visual pointer for operator)
                     center_x = (x1 + x2) // 2
                     arrow_start_y = max(y1 - 50, warning_bg_y2 + 5)
                     if arrow_start_y < y1 - 5:
@@ -721,7 +721,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                                        (center_x, y1 - 2),
                                        warning_color, 3, tipLength=0.4)
 
-            # Show state info di bawah bbox â€” hanya untuk HIGH collision (emergency)
+            # Show state info di bawah bbox — hanya untuk HIGH collision (emergency)
             if alert_level_bbox == 'emergency':
                 state_info = detection.get('state', 'confirmed')
                 tier = detection.get('tier', 0)
@@ -750,7 +750,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                 cv2.putText(vis_frame, info, (x1, y2 + 25),
                            font, 0.6, color, 2)
             
-            # Show detail di dalam box dan collision point â€” hanya untuk HIGH collision
+            # Show detail di dalam box dan collision point — hanya untuk HIGH collision
             tier = detection.get('tier', 0)
             detection_mode = detection.get('detection_mode', 'normal')
             if alert_level_bbox != 'emergency':
@@ -768,7 +768,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                     momentum_transfer_j = detection.get('momentum_transfer_j', 0.0)
                     max_momentum = max(momentum_transfer_i, momentum_transfer_j)
                     relative_velocity_drop = detection.get('relative_velocity_drop', 0.0) * 100
-                    detail_text = f"Tier0.5: Push | IoU {iou*100:.0f}% | Momentum {max_momentum:.0f} | v_relâ†“ {relative_velocity_drop:.0f}%"
+                    detail_text = f"Tier0.5: Push | IoU {iou*100:.0f}% | Momentum {max_momentum:.0f} | v_rel↓ {relative_velocity_drop:.0f}%"
                 elif tier == 1.5:
                     # Tier 1.5: Sparse Scene - show rotation spike
                     iou = detection.get('iou_overlap', 0.0)
@@ -819,7 +819,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                 cv2.putText(vis_frame, detail_text, (detail_x, detail_y),
                            font, 0.5, (0, 255, 255), 1)
             
-            # Draw collision point â€” hanya untuk HIGH collision
+            # Draw collision point — hanya untuk HIGH collision
             collision_point = detection.get('collision_point', None) if alert_level_bbox == 'emergency' else None
             if collision_point:
                 cx, cy = int(collision_point[0]), int(collision_point[1])
@@ -889,7 +889,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                         warning_color = (0, 220, 255)     # Yellow: monitor closely
                         warning_text = f"[M] {stored_confidence_label}: Monitor closely"
 
-                    # â”€â”€ Persistent alert bbox (solid colored border) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    # ── Persistent alert bbox (solid colored border) ───────────────
                     cv2.rectangle(vis_frame, (x1, y1), (x2, y2), warning_color, 3)
 
                     warning_font = cv2.FONT_HERSHEY_SIMPLEX
@@ -926,7 +926,7 @@ def visualize_detections(frame: np.ndarray, behaviour_results: Dict,
                     cv2.putText(vis_frame, warning_text, (warning_x, warning_y),
                                warning_font, warning_font_scale, warning_color, warning_thickness)
 
-                    # â”€â”€ Downward arrow callout â†’ vehicle (persisted) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                    # ── Downward arrow callout → vehicle (persisted) ───────────────
                     center_x = (x1 + x2) // 2
                     arrow_start_y = max(y1 - 50, warning_bg_y2 + 5)
                     if arrow_start_y < y1 - 5:
@@ -1257,7 +1257,7 @@ def draw_alert_banner(frame: np.ndarray, behaviour_results: Dict,
                     high_conf_active = True
                     break
 
-            # Low-confidence (< 30%) tidak mengaktifkan banner â€” NORMAL, tidak ada bukti kuat
+            # Low-confidence (< 30%) tidak mengaktifkan banner — NORMAL, tidak ada bukti kuat
         
         # ============================================
         # PROXIMITY ALARM DISABLED (Priority 2 - commented out)
@@ -1479,7 +1479,7 @@ def draw_alert_banner(frame: np.ndarray, behaviour_results: Dict,
                 else:
                     alert_text = "MONITOR CLOSELY"
             else:
-                # info/normal â€” dark gray kecil
+                # info/normal — dark gray kecil
                 banner_height = 35
                 banner_color = (40, 40, 40)
                 alert_text = f"[INFO] {confidence_label}"
@@ -1932,25 +1932,25 @@ def generate_forensic_report(collision_detection: Dict, frame_id: int,
         report_lines.append(f"   - Detection Type: EVASIVE COLLISION (vehicle swerved suddenly)")
         report_lines.append(f"   - Collision Confidence: {confidence:.0f}% ({confidence_level})")
         report_lines.append(f"   - Evidence Breakdown:")
-        report_lines.append(f"     â€¢ Proximity Score: {evidence.get('proximity_score', 0)}/30 (max IoU: {evidence.get('max_iou', 0.0):.3f})")
-        report_lines.append(f"     â€¢ Evasive Score: {evidence.get('evasive_score', 0)}/25 (angular vel: {angular_vel:.1f}Â°/fr)")
-        report_lines.append(f"     â€¢ Impact Score: {evidence.get('impact_score', 0)}/30 (victim: {victim_status})")
-        report_lines.append(f"     â€¢ Motion Score: {evidence.get('motion_score', 0)}/15 (closing rate: {evidence.get('closing_rate', 0.0):.1f} px/fr)")
-        report_lines.append(f"   - Angular Velocity: {angular_vel:.1f}Â°/frame (sudden direction change)")
-        report_lines.append(f"   - Lateral Acceleration: {lateral_acc:.2f} px/frÂ² (evasive maneuver)")
-        report_lines.append(f"   - Direction Change: {direction_change:.1f}Â° (total deflection)")
+        report_lines.append(f"     • Proximity Score: {evidence.get('proximity_score', 0)}/30 (max IoU: {evidence.get('max_iou', 0.0):.3f})")
+        report_lines.append(f"     • Evasive Score: {evidence.get('evasive_score', 0)}/25 (angular vel: {angular_vel:.1f}°/fr)")
+        report_lines.append(f"     • Impact Score: {evidence.get('impact_score', 0)}/30 (victim: {victim_status})")
+        report_lines.append(f"     • Motion Score: {evidence.get('motion_score', 0)}/15 (closing rate: {evidence.get('closing_rate', 0.0):.1f} px/fr)")
+        report_lines.append(f"   - Angular Velocity: {angular_vel:.1f}°/frame (sudden direction change)")
+        report_lines.append(f"   - Lateral Acceleration: {lateral_acc:.2f} px/fr² (evasive maneuver)")
+        report_lines.append(f"   - Direction Change: {direction_change:.1f}° (total deflection)")
         report_lines.append(f"   - Aggressor Speed: {aggressor_speed:.1f} px/fr")
         report_lines.append(f"   - Victim Status: {victim_status.upper()}")
         if victim_status == 'visible':
             report_lines.append(f"   - Victim Impact Evidence:")
-            report_lines.append(f"     â€¢ Velocity Change: {evidence.get('victim_velocity_change', 0.0)*100:.0f}%")
-            report_lines.append(f"     â€¢ Direction Change: {evidence.get('victim_direction_change', 0.0):.1f}Â°")
+            report_lines.append(f"     • Velocity Change: {evidence.get('victim_velocity_change', 0.0)*100:.0f}%")
+            report_lines.append(f"     • Direction Change: {evidence.get('victim_direction_change', 0.0):.1f}°")
         proximity_frames = collision_detection.get('proximity_frames', 0)
         max_iou = collision_detection.get('max_iou', 0.0)
         report_lines.append(f"   - Proximity History: {proximity_frames} frames, max IoU: {max_iou:.3f}")
     else:
         # Normal collision reporting
-        report_lines.append(f"   - Impact Angle: {impact_angle:.1f}Â° (nearly straight, same direction)")
+        report_lines.append(f"   - Impact Angle: {impact_angle:.1f}° (nearly straight, same direction)")
         report_lines.append(f"   - Collision Point: [{collision_point[0]:.0f}, {collision_point[1]:.0f}] pixels")
         report_lines.append(f"   - Energy Loss: Track {track_id_1}={energy_loss_i*100:.0f}%, Track {track_id_2}={energy_loss_j*100:.0f}%")
         report_lines.append(f"   - Total Energy Loss: {total_energy_loss*100:.0f}%")
@@ -1960,13 +1960,13 @@ def generate_forensic_report(collision_detection: Dict, frame_id: int,
         report_lines.append(f"   - Closing Rate: {closing_rate:.1f} px/frame (excessive)")
         push_acc = max(collision_detection.get('push_acceleration_i', 0.0),
                        collision_detection.get('push_acceleration_j', 0.0))
-        report_lines.append(f"   - Push Acceleration: {push_acc:.2f} px/frÂ²")
+        report_lines.append(f"   - Push Acceleration: {push_acc:.2f} px/fr²")
 
     report_lines.append("")
     report_lines.append("3. COLLISION TYPE DETAILS (The Mechanics)")
     report_lines.append("   " + "-" * 57)
     report_lines.append(f"   - Type: {collision_type}")
-    report_lines.append(f"   - Impact Angle: {impact_angle:.1f}Â°")
+    report_lines.append(f"   - Impact Angle: {impact_angle:.1f}°")
     if has_rear_end_evidence:
         report_lines.append("   - Characteristics: Same direction, rear vehicle faster")
         report_lines.append("   - Typical Cause: Failure to maintain safe distance")
@@ -1992,13 +1992,13 @@ def generate_forensic_report(collision_detection: Dict, frame_id: int,
     report_lines.append("5. PHYSICS VALIDATION")
     report_lines.append("   " + "-" * 75)
     momentum_loss = abs(momentum_transfer_i - momentum_transfer_j) / max(abs(momentum_transfer_i), abs(momentum_transfer_j), 1.0) * 100
-    report_lines.append(f"   âœ“ Momentum Conservation: VALID")
+    report_lines.append(f"   ✓ Momentum Conservation: VALID")
     report_lines.append(f"     Momentum loss to deformation: {momentum_loss:.1f}% (within expected range)")
     if total_energy_loss > 0.8:
-        report_lines.append(f"   âœ“ Energy Conservation: VALID")
+        report_lines.append(f"   ✓ Energy Conservation: VALID")
         report_lines.append(f"     Energy dissipated: {total_energy_loss*100:.0f}% (high dissipation)")
     else:
-        report_lines.append(f"   âš  Energy Conservation: PARTIAL")
+        report_lines.append(f"   ⚠ Energy Conservation: PARTIAL")
         report_lines.append(f"     Energy dissipated: {total_energy_loss*100:.0f}% (moderate dissipation)")
     report_lines.append("")
     report_lines.append("=" * 80)
@@ -2208,32 +2208,32 @@ def generate_forensic_telegram_message(collision_detection: Dict, frame_id: int,
     
     # Build message dengan HTML formatting
     message_lines = []
-    message_lines.append("ðŸš¨ <b>COLLISION DETECTED - FORENSIC ALERT</b>")
+    message_lines.append("🚨 <b>COLLISION DETECTED - FORENSIC ALERT</b>")
     message_lines.append("")
-    message_lines.append(f"ðŸ“‹ <b>Case:</b> {case_id}")
-    message_lines.append(f"â±ï¸ <b>Time:</b> {frame_timestamp} (Frame {frame_id})")
-    message_lines.append(f"ðŸ“¹ <b>Video:</b> {Path(video_path).name}")
+    message_lines.append(f"📋 <b>Case:</b> {case_id}")
+    message_lines.append(f"⏱️ <b>Time:</b> {frame_timestamp} (Frame {frame_id})")
+    message_lines.append(f"📹 <b>Video:</b> {Path(video_path).name}")
     message_lines.append("")
-    message_lines.append(f"ðŸ”´ <b>SEVERITY:</b> {severity} ({total_energy_loss*100:.0f}% Energy Loss)")
-    message_lines.append(f"ðŸš— <b>TYPE:</b> {collision_type}")
+    message_lines.append(f"🔴 <b>SEVERITY:</b> {severity} ({total_energy_loss*100:.0f}% Energy Loss)")
+    message_lines.append(f"🚗 <b>TYPE:</b> {collision_type}")
     message_lines.append("")
-    message_lines.append("<b>âš–ï¸ VERDICT:</b>")
-    message_lines.append(f"â€¢ <b>Aggressor:</b> Vehicle {aggressor_id} ({aggressor_class.upper()})")
-    message_lines.append(f"â€¢ <b>Victim:</b> Vehicle {victim_id} ({victim_class.upper()})")
-    message_lines.append(f"â€¢ <b>Evidence:</b> Momentum Transfer {aggressor_id}â†’{victim_id} (+{momentum_value:.1f} units)")
+    message_lines.append("<b>⚖️ VERDICT:</b>")
+    message_lines.append(f"• <b>Aggressor:</b> Vehicle {aggressor_id} ({aggressor_class.upper()})")
+    message_lines.append(f"• <b>Victim:</b> Vehicle {victim_id} ({victim_class.upper()})")
+    message_lines.append(f"• <b>Evidence:</b> Momentum Transfer {aggressor_id}→{victim_id} (+{momentum_value:.1f} units)")
     braking_status = "NO" if not aggressor_braked else "YES"
-    message_lines.append(f"â€¢ <b>Braking:</b> {braking_status} (Aggressor did {'NOT ' if not aggressor_braked else ''}brake before impact)")
+    message_lines.append(f"• <b>Braking:</b> {braking_status} (Aggressor did {'NOT ' if not aggressor_braked else ''}brake before impact)")
     message_lines.append("")
-    message_lines.append("<b>ðŸ“Š PHYSICS EVIDENCE:</b>")
-    message_lines.append(f"â€¢ Energy Loss: {aggressor_id}={aggressor_energy*100:.0f}%, {victim_id}={victim_energy*100:.0f}%")
-    message_lines.append(f"â€¢ Pre-collision: {aggressor_id}={aggressor_speed:.1f} px/fr, {victim_id}={victim_speed:.1f} px/fr")
-    message_lines.append(f"â€¢ Impact Angle: {impact_angle:.1f}Â°")
-    message_lines.append(f"â€¢ Momentum Transfer: {momentum_value:.1f} units ({aggressor_id}â†’{victim_id})")
+    message_lines.append("<b>📊 PHYSICS EVIDENCE:</b>")
+    message_lines.append(f"• Energy Loss: {aggressor_id}={aggressor_energy*100:.0f}%, {victim_id}={victim_energy*100:.0f}%")
+    message_lines.append(f"• Pre-collision: {aggressor_id}={aggressor_speed:.1f} px/fr, {victim_id}={victim_speed:.1f} px/fr")
+    message_lines.append(f"• Impact Angle: {impact_angle:.1f}°")
+    message_lines.append(f"• Momentum Transfer: {momentum_value:.1f} units ({aggressor_id}→{victim_id})")
     message_lines.append("")
-    message_lines.append(f"ðŸ“ <b>Location:</b> [{collision_point[0]:.0f}, {collision_point[1]:.0f}]")
-    message_lines.append(f"ðŸŽ¯ <b>Confidence:</b> 95% (High)")
+    message_lines.append(f"📍 <b>Location:</b> [{collision_point[0]:.0f}, {collision_point[1]:.0f}]")
+    message_lines.append(f"🎯 <b>Confidence:</b> 95% (High)")
     message_lines.append("")
-    message_lines.append("â”" * 40)
+    message_lines.append("━" * 40)
     message_lines.append("Full forensic report available in terminal log.")
     
     message = "\n".join(message_lines)
@@ -2290,9 +2290,9 @@ def main():
         if not isinstance(sys.stderr, DualLogger):
             sys.stderr = DualLogger(terminal_log_path, sys.stderr)
             
-        print(f"ðŸ“ Terminal output will be captured to: {terminal_log_path}")
+        print(f"📝 Terminal output will be captured to: {terminal_log_path}")
     except Exception as e:
-        print(f"âš ï¸ Warning: Failed to setup terminal logging: {e}")
+        print(f"⚠️ Warning: Failed to setup terminal logging: {e}")
     
     # Setup logging to file (log.txt)
     log_file = 'log.txt'
@@ -2322,30 +2322,30 @@ def main():
     
     # Validate video file
     if not args.is_live_source and not os.path.exists(args.video):
-        print(f"âŒ Error: Video file not found: {args.video}")
+        print(f"❌ Error: Video file not found: {args.video}")
         sys.exit(1)
     
     print("=" * 60)
     print("LTE-TrackGuard - Physics-Based Traffic Behaviour Detection")
     print("=" * 60)
     source_kind = "Live Source" if args.is_live_source else "Input Video"
-    print(f"ðŸ“¹ {source_kind}: {args.video}")
-    print(f"ðŸ“ Logging to: {log_file}")
+    print(f"📹 {source_kind}: {args.video}")
+    print(f"📝 Logging to: {log_file}")
     
     # Configure physics settings
     configure_physics_settings(args)
     
     # Initialize track manager
-    print(f"\nðŸš€ Initializing Track Manager (tracker: {args.tracker})...")
+    print(f"\n🚀 Initializing Track Manager (tracker: {args.tracker})...")
     try:
         if args.tracker == 'bytetrack':
             from core.bytetrack_manager import ByteTrackManager
             track_manager = ByteTrackManager(use_physics=args.physics)
         else:
             track_manager = PureSmartHungarianTrackManager(use_physics=args.physics)
-        print("âœ“ Track Manager initialized successfully")
+        print("✓ Track Manager initialized successfully")
     except Exception as e:
-        print(f"âŒ Error initializing track manager: {e}")
+        print(f"❌ Error initializing track manager: {e}")
         sys.exit(1)
     
     # Initialize Telegram notifier (jika flag --telegram aktif)
@@ -2354,12 +2354,12 @@ def main():
         if TELEGRAM_AVAILABLE:
             try:
                 telegram_notifier = TelegramNotifier()
-                print("ðŸ“± Telegram notifications: ENABLED")
+                print("📱 Telegram notifications: ENABLED")
             except Exception as e:
-                print(f"âš ï¸  Warning: Could not initialize Telegram notifier: {e}")
+                print(f"⚠️  Warning: Could not initialize Telegram notifier: {e}")
                 print("   Continuing without Telegram notifications...")
         else:
-            print("âš ï¸  Warning: Telegram notification service not available")
+            print("⚠️  Warning: Telegram notification service not available")
             print("   Install required packages or check notification_service.py")
     
     # Initialize forensic logging (1 file per video)
@@ -2375,17 +2375,17 @@ def main():
     reported_collisions = set()  # Set of (track_id_1, track_id_2) pairs
     fired_pairs = {}             # pair -> highest reported alert level; red upgrades are still logged
 
-    # Separate eval tracking â€” resets per episode so each new alarm episode is counted
+    # Separate eval tracking — resets per episode so each new alarm episode is counted
     eval_reported_set = set()  # pairs logged for eval in current collision episode
     
-    print(f"ðŸ“ Forensic logs will be saved to: {forensic_log_file}")
+    print(f"📝 Forensic logs will be saved to: {forensic_log_file}")
     
     # Open video / webcam / stream
-    print(f"\nðŸ“¹ Opening source: {args.video}")
+    print(f"\n📹 Opening source: {args.video}")
     cap = _open_capture(args.video)
     
     if not cap.isOpened():
-        print(f"âŒ Error: Cannot open input source")
+        print(f"❌ Error: Cannot open input source")
         sys.exit(1)
     
     # Get video properties
@@ -2402,7 +2402,7 @@ def main():
     print(f"   FPS: {fps}")
     print(f"   Total Frames: {'LIVE/unknown' if args.is_live_source or total_frames == 0 else total_frames}")
 
-    # Update PPL window W = fps Ã— 1 detik (PPL init default 30fps)
+    # Update PPL window W = fps × 1 detik (PPL init default 30fps)
     if args.collision_baseline != 'none':
         if not args.physics:
             print("WARNING: collision baseline requires --physics; baseline was not enabled.")
@@ -2430,7 +2430,7 @@ def main():
             )
             print("   Fallen PPL scalar logging: ENABLED")
 
-    # â”€â”€ Scalar logging: enable setelah FPS diketahui â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Scalar logging: enable setelah FPS diketahui ─────────────────────────
     if args.log_scalars:
         _cd = (track_manager.behaviour_detectors.get('collision')
                if hasattr(track_manager, 'behaviour_detectors') else None)
@@ -2441,13 +2441,13 @@ def main():
                 label=args.label,
                 camera_angle=args.camera_angle,
             )
-            print(f"ðŸ“Š Scalar logging ENABLED")
-            print(f"   Label        : {args.label} â€” {_label_str}")
+            print(f"📊 Scalar logging ENABLED")
+            print(f"   Label        : {args.label} — {_label_str}")
             print(f"   Camera angle : {args.camera_angle}")
         else:
-            print("âš ï¸  Scalar logging: collision detector tidak tersedia. "
+            print("⚠️  Scalar logging: collision detector tidak tersedia. "
                   "Jalankan dengan --physics --detect collision|all")
-    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ─────────────────────────────────────────────────────────────────────────
     
     evidence_dir = Path(args.evidence_dir)
     evidence_level_dirs = {
@@ -2536,7 +2536,7 @@ def main():
         else:
             print("Output video recording disabled (--no-output).")
     # Processing loop
-    print("\nðŸŽ¬ Starting processing...")
+    print("\n🎬 Starting processing...")
     print("Press 'q' to quit, 'p' to pause, SPACE to step frame")
     
     frame_id = 0
@@ -2623,16 +2623,16 @@ def main():
             if not ret:
                 if args.is_live_source:
                     read_failure_reconnects += 1
-                    print(f"\nâš ï¸  Live source read failed. Reconnecting in {args.reconnect_delay:.1f}s...")
+                    print(f"\n⚠️  Live source read failed. Reconnecting in {args.reconnect_delay:.1f}s...")
                     cap.release()
                     time.sleep(args.reconnect_delay)
                     cap = _open_capture(args.video)
                     stream_open_time = time.time()
                     if not cap.isOpened():
                         reconnect_failures += 1
-                        print("âš ï¸  Reconnect failed; retrying...")
+                        print("⚠️  Reconnect failed; retrying...")
                     continue
-                print("\nâœ“ End of video reached")
+                print("\n✓ End of video reached")
                 break
             
             frame_id += 1
@@ -2644,7 +2644,7 @@ def main():
             try:
                 results = track_manager.process_frame(frame, frame_id)
             except Exception as e:
-                print(f"âŒ Error processing frame {frame_id}: {e}")
+                print(f"❌ Error processing frame {frame_id}: {e}")
                 if args.verbose:
                     import traceback
                     traceback.print_exc()
@@ -2773,7 +2773,7 @@ def main():
                                         f.write(forensic_report)
                                         f.write("\n\n")
                                     
-                                    print(f"âœ“ Forensic report saved to: {forensic_log_file.name}")
+                                    print(f"✓ Forensic report saved to: {forensic_log_file.name}")
                                     
                                     # 2. Send Telegram notification (jika enabled)
                                     # ONLY send Telegram for emergency (COLLISION DETECTED, confidence >= 70%)
@@ -2799,7 +2799,7 @@ def main():
                                             # Send message
                                             success = telegram_notifier.send_message(forensic_message, parse_mode="HTML")
                                             if success:
-                                                print(f"âœ“ Telegram notification sent successfully for Frame {frame_id} (pair_key={pair_key})")
+                                                print(f"✓ Telegram notification sent successfully for Frame {frame_id} (pair_key={pair_key})")
                                                 if not args.no_evidence_snapshots and pair_key not in telegram_photo_pairs:
                                                     try:
                                                         source_stem = getattr(args, 'source_stem', None) or Path(args.video).stem
@@ -2868,16 +2868,16 @@ def main():
                                                 time_since_last = current_time - last_notif_time
                                                 if time_since_last < rate_limit:
                                                     remaining = rate_limit - time_since_last
-                                                    print(f"â¸ï¸ Telegram notification skipped for Frame {frame_id} (pair_key={pair_key}) due to rate limit: {remaining:.1f}s remaining")
+                                                    print(f"⏸️ Telegram notification skipped for Frame {frame_id} (pair_key={pair_key}) due to rate limit: {remaining:.1f}s remaining")
                                                 else:
-                                                    print(f"âš ï¸ Warning: Telegram notification failed for Frame {frame_id} (pair_key={pair_key}) - check logs above for API errors")
+                                                    print(f"⚠️ Warning: Telegram notification failed for Frame {frame_id} (pair_key={pair_key}) - check logs above for API errors")
                                         except Exception as e:
-                                            print(f"âš ï¸ ERROR: Failed to send Telegram notification for Frame {frame_id} (pair_key={pair_key}): {e}")
+                                            print(f"⚠️ ERROR: Failed to send Telegram notification for Frame {frame_id} (pair_key={pair_key}): {e}")
                                             if args.verbose:
                                                 import traceback
                                                 traceback.print_exc()
                                     elif telegram_notifier is not None and det_alert_level != 'emergency':
-                                        print(f"[TELEGRAM] â„¹ï¸ Skipped (non-emergency: {det_confidence_label}) for Frame {frame_id}, pair_key={pair_key}")
+                                        print(f"[TELEGRAM] ℹ️ Skipped (non-emergency: {det_confidence_label}) for Frame {frame_id}, pair_key={pair_key}")
                                     else:
                                         print(f"[TELEGRAM] telegram_notifier is None - skipping notification for Frame {frame_id}")
                                     
@@ -2885,15 +2885,15 @@ def main():
                                     reported_collisions.add(pair_key)
                                     
                                 except Exception as e:
-                                    print(f"âš ï¸ Warning: Failed to generate forensic report: {e}")
+                                    print(f"⚠️ Warning: Failed to generate forensic report: {e}")
                                     if args.verbose:
                                         import traceback
                                         traceback.print_exc()
 
-                        # ALL_DETECTION log â€” always printed (independent of EVALUATION_AVAILABLE)
+                        # ALL_DETECTION log — always printed (independent of EVALUATION_AVAILABLE)
                         # eval_batch.py parses these lines from subprocess stdout.
                         # Log setiap episode baru (is_first_detection) ke all_ai_detections tanpa
-                        # gate eval_reported_set â€” cluster_detections() di evaluate_tudat sudah
+                        # gate eval_reported_set — cluster_detections() di evaluate_tudat sudah
                         # handle deduplication berdasarkan proximity waktu. Ini memastikan episode
                         # yang fire di dalam GT window tidak tersuppress oleh episode lebih awal
                         # yang fire di luar window (fix untuk TP=0 false negative).
@@ -2903,7 +2903,7 @@ def main():
                             bbox_primary = None
                             bbox_secondary = None
 
-                            # â”€â”€ KINEMATIC EVIDENCE (for scientific proof) â”€â”€
+                            # ── KINEMATIC EVIDENCE (for scientific proof) ──
                             kinematic_evidence = {}
 
                             # Try get bbox dari current track bboxes
@@ -2965,7 +2965,7 @@ def main():
                                 if args.verbose:
                                     print(f"[DEBUG] Warning: Could not extract bbox for evaluation: {e}")
 
-                            # AIDetection requires the evaluation module â€” only append when available
+                            # AIDetection requires the evaluation module — only append when available
                             if EVALUATION_AVAILABLE:
                                 all_ai_detections.append(AIDetection(
                                     frame=frame_id,
@@ -2979,7 +2979,7 @@ def main():
                                     kinematic_evidence=kinematic_evidence if kinematic_evidence else None
                                 ))
 
-                            # ALL_DETECTION print â€” always runs so eval_batch.py can parse it
+                            # ALL_DETECTION print — always runs so eval_batch.py can parse it
                             import math as _mi_inline
                             _al_inline = det.get('alert_level', 'emergency')
                             _conf_inline = det.get('confidence', 0.0)
@@ -3067,6 +3067,10 @@ def main():
                 det for det in behaviour_results.get('collision', [])
                 if det.get('alert_level') in ('emergency', 'warning', 'caution')
             ] if args.physics and behaviour_results else []
+            emergency_collision_dets = [
+                det for det in evidence_collision_dets
+                if det.get('alert_level') == 'emergency'
+            ]
             if evidence_collision_dets and not args.no_evidence_snapshots:
                 source_stem = getattr(args, 'source_stem', None) or Path(args.video).stem
                 for det in evidence_collision_dets:
@@ -3165,9 +3169,7 @@ def main():
                 stage_profile_file.flush()
             # Write output - selalu write karena out_writer selalu ada
             if out_writer is not None and out_writer.isOpened():
-                success = out_writer.write(vis_frame)
-                if not success and frame_id % 30 == 0:  # Log setiap 30 frames
-                    print(f"âš ï¸ Warning: Failed to write frame {frame_id} to video")
+                out_writer.write(vis_frame)
                 
                 # Force flush every 30 frames to ensure data is written
                 if frame_id % 30 == 0 and hasattr(out_writer, 'get'):
@@ -3177,7 +3179,7 @@ def main():
                     except:
                         pass
             elif save_output and frame_id == 1:
-                print(f"âŒ ERROR: VideoWriter is not opened! Cannot write frames.")
+                print(f"❌ ERROR: VideoWriter is not opened! Cannot write frames.")
             
             # Display
             if not args.no_display:
@@ -3189,18 +3191,18 @@ def main():
             if args.fps_limit:
                 time.sleep(1.0 / args.fps_limit)
             if args.max_frames and frame_id >= args.max_frames:
-                print(f"\nâœ“ Max frames reached: {args.max_frames}")
+                print(f"\n✓ Max frames reached: {args.max_frames}")
                 break
         
         # Handle keyboard input
         key = cv2.waitKey(1 if not paused else 0) & 0xFF if not args.no_display else 255
         
         if key == ord('q'):
-            print("\nâ¹ï¸  Stopped by user")
+            print("\n⏹️  Stopped by user")
             break
         elif key == ord('p'):
             paused = not paused
-            print(f"{'â¸ï¸  Paused' if paused else 'â–¶ï¸  Resumed'}")
+            print(f"{'⏸️  Paused' if paused else '▶️  Resumed'}")
         elif key == ord(' ') and paused:
             # Step one frame
             paused = False
@@ -3211,7 +3213,7 @@ def main():
     if stage_profile_file is not None:
         stage_profile_file.close()
     if out_writer is not None:
-        print(f"ðŸ“¹ Releasing VideoWriter...")
+        print(f"📹 Releasing VideoWriter...")
         out_writer.release()  # Selalu release karena out_writer selalu ada
         
         # Wait a moment for file system to sync
@@ -3220,18 +3222,18 @@ def main():
         output_path = Path(args.output).absolute()
         if output_path.exists():
             file_size = output_path.stat().st_size / (1024 * 1024)  # MB
-            print(f"âœ… Output video saved successfully: {output_path}")
+            print(f"✅ Output video saved successfully: {output_path}")
             print(f"   File size: {file_size:.2f} MB")
             print(f"   Location: {output_path.parent}")
         else:
-            print(f"âŒ ERROR: Output video file NOT found!")
+            print(f"❌ ERROR: Output video file NOT found!")
             print(f"   Expected location: {output_path}")
             print(f"   Directory exists: {output_path.parent.exists()}")
             print(f"   Files in directory: {list(output_path.parent.glob('*.mp4'))[:5]}")
     if not args.no_display:
         cv2.destroyAllWindows()
 
-    # â”€â”€ Flush Scalar Log ke CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Flush Scalar Log ke CSV ───────────────────────────────────────────────
     if args.log_scalars:
         _cd = (track_manager.behaviour_detectors.get('collision')
                if hasattr(track_manager, 'behaviour_detectors') else None)
@@ -3247,19 +3249,19 @@ def main():
                 if args.scalar_log_output:
                     _out_csv = args.scalar_log_output
                 else:
-                    # Auto-name dari video: inter3.mp4 â†’ scalar_logs/inter3_scalar.csv
+                    # Auto-name dari video: inter3.mp4 → scalar_logs/inter3_scalar.csv
                     _out_csv = str(_scalar_dir / f"{args.source_stem}_scalar.csv")
 
                 with open(_out_csv, 'w', newline='', encoding='utf-8') as _f:
                     _writer = _csv.DictWriter(_f, fieldnames=_log_data[0].keys())
                     _writer.writeheader()
                     _writer.writerows(_log_data)
-                print(f"\nâœ… Scalar log disimpan: {len(_log_data):,} entries â†’ {_out_csv}")
+                print(f"\n✅ Scalar log disimpan: {len(_log_data):,} entries → {_out_csv}")
             else:
-                print("\nâ„¹ï¸  Scalar log: tidak ada entry (tidak ada proximate pair).")
-    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                print("\nℹ️  Scalar log: tidak ada entry (tidak ada proximate pair).")
+    # ─────────────────────────────────────────────────────────────────────────
 
-    # â”€â”€ Flush Fallen Event Log â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Flush Fallen Event Log ───────────────────────────────────────────────
     _fd = (track_manager.behaviour_detectors.get('fallen')
            if hasattr(track_manager, 'behaviour_detectors') and track_manager.behaviour_detectors else None)
     if _fd is not None and hasattr(_fd, 'get_scalar_log'):
@@ -3278,7 +3280,7 @@ def main():
                 _writer = _csv.DictWriter(_f, fieldnames=_fallen_scalar[0].keys())
                 _writer.writeheader()
                 _writer.writerows(_fallen_scalar)
-            print(f"\nðŸ“Š Fallen PPL scalar log saved: {len(_fallen_scalar):,} rows -> {_fallen_scalar_out}")
+            print(f"\n📊 Fallen PPL scalar log saved: {len(_fallen_scalar):,} rows -> {_fallen_scalar_out}")
 
     if args.fallen_event_log and detection_history['fallen']:
         import csv as _csv
@@ -3289,10 +3291,10 @@ def main():
             _w.writerow(['frame_id', 'track_id'])
             for _frame, _, _tid in detection_history['fallen']:
                 _w.writerow([_frame, _tid])
-        print(f"ðŸ“‹ Fallen event log saved: {_fallen_out} ({len(detection_history['fallen'])} events)")
-    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        print(f"📋 Fallen event log saved: {_fallen_out} ({len(detection_history['fallen'])} events)")
+    # ─────────────────────────────────────────────────────────────────────────
 
-    # â”€â”€ Automatic Evaluation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Automatic Evaluation ─────────────────────────────────────────────
     if EVALUATION_AVAILABLE and not args.is_live_source:
         print("\n" + "="*80)
         print("  AUTOMATIC EVALUATION REPORT")
@@ -3306,7 +3308,7 @@ def main():
         match = re.match(r'((?:v(?:id_?)?|motor-vid-)\d+)', video_filename, re.IGNORECASE)
 
         if match:
-            video_key = match.group(1).lower()  # e.g. v1, vid_1, V31 â†’ lowercase
+            video_key = match.group(1).lower()  # e.g. v1, vid_1, V31 → lowercase
             
             # 2. Parse annotations
             # We assume TU-DAT is in the current directory or nearby
@@ -3379,7 +3381,7 @@ def main():
                             
                             # Print matches detail with spatial metrics
                             for m in matches:
-                                status = "âœ… MATCH" if m.matched else "âŒ MISSED"
+                                status = "✅ MATCH" if m.matched else "❌ MISSED"
                                 delay_str = f"{m.delay_frames:+d} fr ({m.delay_seconds:+.2f}s)" if m.matched else "-"
 
                                 # Include spatial metrics for matched events
@@ -3416,7 +3418,7 @@ def main():
                             if absorbed:
                                 print(f"\nAbsorbed Events (secondary detection of same collision): {len(absorbed)}")
 
-                            # â”€â”€ GENERATE KINEMATIC EVIDENCE GRAPHS â”€â”€
+                            # ── GENERATE KINEMATIC EVIDENCE GRAPHS ──
                             # Collision plots expect pairwise kinematic_evidence with
                             # primary/secondary keys. Fallen events are single-track PPL
                             # events, so skip this plotter to avoid noisy debug spam.
@@ -3428,7 +3430,7 @@ def main():
                                     )
 
                                     video_name = Path(video_filename).stem.replace('_output', '').replace('.mov', '').replace('.mp4', '')
-                                    print("\nðŸ”¬ Generating kinematic evidence graphs...")
+                                    print("\n🔬 Generating kinematic evidence graphs...")
                                     plot_kinematics_speed_profile(all_ai_detections, video_name, output_dir="kinematic_plots")
                                     plot_acceleration_signature(all_ai_detections, video_name, output_dir="kinematic_plots")
                                 except Exception as e:
@@ -3446,14 +3448,14 @@ def main():
                     break
             
             if not found_annotations:
-                print(f"âš ï¸ No annotations found for {video_filename} (checked key: {video_key})")
+                print(f"⚠️ No annotations found for {video_filename} (checked key: {video_key})")
                 print("   Ensure 'TU-DAT' folder exists and contains .txt files matching the video name.")
         else:
-            print(f"âš ï¸ Filename {video_filename} does not match standard format (v1.mp4, etc). Evaluation skipped.")
+            print(f"⚠️ Filename {video_filename} does not match standard format (v1.mp4, etc). Evaluation skipped.")
     
     # Final statistics
     print("\n" + "=" * 60)
-    print("ðŸ“Š FINAL STATISTICS")
+    print("📊 FINAL STATISTICS")
     print("=" * 60)
     
     # Processing stats
@@ -3471,7 +3473,7 @@ def main():
     
     # Detection stats
     if args.physics:
-        print(f"\nðŸ”¬ Physics Detection Summary:")
+        print(f"\n🔬 Physics Detection Summary:")
         for det_type, count in total_detections.items():
             if count > 0:
                 # No emoji - text only
@@ -3479,17 +3481,17 @@ def main():
     
     # Track statistics
     track_stats = track_manager.get_track_statistics()
-    print(f"\nðŸ“ˆ Tracking Statistics:")
+    print(f"\n📈 Tracking Statistics:")
     print(f"   Total Tracks Created: {track_stats.get('total_tracks_created', 0)}")
     print(f"   Active Tracks: {track_stats.get('active_tracks', 0)}")
     print(f"   Ghost Reidentifications: {track_stats.get('total_ghost_reidentifications', 0)}")
     
     if out_writer is not None:
-        print(f"\nðŸ’¾ Output video saved to: {args.output}")
+        print(f"\n💾 Output video saved to: {args.output}")
     else:
-        print("\nðŸ’¾ Output video not saved.")
+        print("\n💾 Output video not saved.")
     
-    print("\nâœ… Processing completed successfully!")
+    print("\n✅ Processing completed successfully!")
 
 
 if __name__ == "__main__":
