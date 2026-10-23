@@ -1,0 +1,17 @@
+# Install PyTorch/torchvision matching the target CUDA/JetPack separately.
+# Direct runtime dependencies; versions were not frozen in the source package.
+torch
+torchvision
+ultralytics
+numpy
+opencv-python
+scipy
+pandas
+lap
+cython_bbox
+loguru
+thop
+paho-mqtt
+psutil
+tabulate
+tqdm

@@ -1,0 +1,26 @@
+# Model weights and exported inference engines stay local.
+*.pt
+*.pth
+*.onnx
+*.engine
+*.weights
+*.tflite
+*.bin
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+runtime/
+runs/
+datasets/
+log_terminal/
+forensic_logs/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.zip
+PACKAGE_MANIFEST.json
