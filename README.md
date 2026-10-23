@@ -1,7 +1,86 @@
-# TrackGuard-LTE Production
+# TrackGuard-LTE
 
-Inference runtime for single-PC and multi-node Jetson deployments. Run all
-commands from the repository root using a Python environment suitable for your device.
+**Local Temporal Evidence for Calibration-Light Edge IoT Traffic Collision
+Alarms from Distributed CCTV**
+
+TrackGuard-LTE turns existing fixed CCTV streams into local traffic-event
+screening nodes. It tracks vehicles, accumulates interpretable visual evidence
+over time, and produces graded alarms that help operators identify interactions
+requiring review. **LTE means Local Temporal Evidence**, referring to local
+track and track-pair histories, rather than cellular Long-Term Evolution.
+
+The framework targets CCTV deployments where reliable camera calibration and
+site-specific accident labels are unavailable. Its intended role is
+**high-sensitivity operator assistance and event screening**. An alarm is a
+request to inspect the evidence, not an independently verified collision.
+
+## Demo
+
+The following short inference example shows the on-screen tracking and alarm
+output. It illustrates system behavior; a single clip is not a performance
+benchmark or a guarantee of collision detection accuracy.
+
+https://github.com/user-attachments/assets/27a917f2-f86c-4349-8091-342c9ac3759e
+
+## How It Works
+
+1. **Detect and track:** YOLO11 detects vehicles, and ByteTrack maintains their
+   identities and rolling bounding-box histories.
+2. **Construct local temporal evidence:** a Physics Primitive Layer (PPL)
+   combines Contact Evidence (CE), Kinetic Energy Loss Ratio (KELR), and Aspect
+   Ratio Shock (ARS). These cues describe contact evolution, relative projected
+   speed loss, and unusual bounding-box shape changes in the image plane.
+3. **Confirm and guard:** temporal confirmation and suppression guards evaluate
+   track-pair evidence before escalating it into operator-facing alarm states.
+4. **Report from the edge:** each node performs inference locally and sends
+   compact alarm/status metadata over MQTT. Evidence snapshots remain on the
+   inference device for review; continuous raw-video upload is not required.
+
+The contribution is the structured integration of temporal evidence and guarded
+alarm escalation, not a new detector or tracker, or the individual geometric
+and motion cues in isolation. Each camera is processed independently: the
+multi-node deployment does not perform multi-camera geometric fusion or
+cross-camera identity tracking.
+
+## Alarm States and Practical Use
+
+| State | Purpose | Snapshot folder |
+| --- | --- | --- |
+| Yellow: monitor closely | Flag low-severity proximity evidence for monitoring. | `caution` |
+| Orange: critical interaction | Bring an interaction to the operator's attention. | `critical` |
+| Red: escalation | Surface a high-severity candidate for prompt human review. | `red` |
+
+Use TrackGuard-LTE to prioritize CCTV review, retain visual evidence around
+flagged interactions, and aggregate events from distributed edge nodes at a
+central receiver. Its ordinal alarm levels express evidence-based escalation;
+they should not be interpreted as calibrated collision probabilities.
+
+## Design Principles and Limits
+
+**Calibration-light does not mean parameter-free.** The main alarm policy does
+not require per-camera metric homography, camera intrinsics, road dimensions,
+or accident-label training at the deployment camera. Thresholds are fixed or
+selected using the train/development protocol and frozen for held-out evaluation.
+The YOLO detector still requires trained object-detection weights.
+
+**Physics-inspired evidence is not a physical measurement.** PPL uses
+image-plane ratios, overlap, relative geometry, and temporal statistics. It does
+not recover real-world distance, metric velocity, vehicle mass, impact force,
+or true kinetic energy.
+
+**Human review remains necessary.** Dense traffic, occlusion, perspective
+compression, hard braking, and tracking errors can produce ambiguous evidence
+and false alarms. Frame-rate reduction can also lower recall. The paper's
+long-duration multi-node experiment demonstrates runtime feasibility and event
+delivery, not preservation of native-frame-rate detection accuracy. Refer to
+the [paper](https://doi.org/10.1109/JIOT.2026.3745703) for the evaluation protocol,
+false-alarm burden, and limitations.
+
+## Running This Repository
+
+This repository provides the inference runtime for single-PC and multi-node
+Jetson deployments. Run the commands below from the repository root using a
+Python environment suitable for your device.
 
 ## YOLO Weights and the VisDrone Dataset
 
