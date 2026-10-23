@@ -90,3 +90,26 @@ frame using a locally available 10-class model. That model is not distributed
 with this repository. These checks do not cover Jetson CUDA inference, live
 CCTV streams, or end-to-end MQTT communication. Test on the target devices
 before deployment.
+
+## Citation
+
+If you use TrackGuard-LTE in your research, experiments, or publications, please
+cite the following paper:
+
+**Anggi Andriyadi, Ding-Hsiang Huang, and Chao-Tung Yang**, "TrackGuard-LTE:
+Local Temporal Evidence for Calibration-Light Edge IoT Traffic Collision Alarms
+from Distributed CCTV," *IEEE Internet of Things Journal*, 2026.
+[https://doi.org/10.1109/JIOT.2026.3745703](https://doi.org/10.1109/JIOT.2026.3745703)
+
+```bibtex
+@ARTICLE{11746008,
+  author={Andriyadi, Anggi and Huang, Ding-Hsiang and Yang, Chao-Tung},
+  journal={IEEE Internet of Things Journal},
+  title={TrackGuard-LTE: Local Temporal Evidence for Calibration-Light Edge IoT Traffic Collision Alarms from Distributed CCTV},
+  year={2026},
+  volume={},
+  number={},
+  pages={1-1},
+  keywords={Cameras;Videos;Internet of Things;Tracking;Vehicles;Long Term Evolution;Labeling;Trajectory;Contacts;Planing;Edge IoT;traffic collision alarm;CCTV analytics;calibration-light sensing;physics-inspired image-plane vision;multi-object tracking;MQTT-ready event reporting;surrogate safety measures},
+  doi={10.1109/JIOT.2026.3745703}}
+```
